@@ -89,6 +89,7 @@ export default {
       message: '',
       reminder_time: ''
     });
+    const BASE_API_URL = ref(import.meta.env.VITE_BASE_API_URL)
     const headers = [
       { title: 'Content', value: 'message' },
       { title: 'Date', value: 'reminder_time' },
@@ -114,7 +115,7 @@ export default {
           queryParams += `reminder_time__gt=${filters.value.reminder_time}&`;
         }
 
-        const response = await axios.get(`http://localhost:8000/api/reminders/?${queryParams}`);
+        const response = await axios.get(`${BASE_API_URL.value}/reminders/?${queryParams}`);
         reminders.value = response.data;
       } catch (error) {
         console.error('Error fetching reminders:', error);
@@ -124,7 +125,7 @@ export default {
     // Fetch leads to populate the select dropdown
     const fetchLeads = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/leads/');
+        const response = await axios.get(`${BASE_API_URL.value}/leads/`);
         leads.value = response.data;
       } catch (error) {
         console.error('Error fetching leads:', error);
@@ -149,7 +150,7 @@ export default {
     const createReminder = async () => {
      
       try {
-        await axios.post('http://localhost:8000/api/reminders/', editedReminder.value);
+        await axios.post(`${BASE_API_URL.value}/reminders/`, editedReminder.value);
         fetchReminders();  // Refresh the list after creating
         editDialog.value = false;
       } catch (error) {
@@ -160,7 +161,7 @@ export default {
     // Update reminder
     const updateReminder = async () => {
       try {
-        await axios.put(`http://localhost:8000/api/reminders/${editedReminder.value.id}/`, editedReminder.value);
+        await axios.put(`${BASE_API_URL.value}/reminders/${editedReminder.value.id}/`, editedReminder.value);
         fetchReminders();  // Refresh the list after editing
         editDialog.value = false;
       } catch (error) {
@@ -177,7 +178,7 @@ export default {
     // Confirm reminder deletion
     const deleteReminderConfirm = async () => {
       try {
-        await axios.delete(`http://localhost:8000/api/reminders/${reminderToDelete.value.id}/`);
+        await axios.delete(`${BASE_API_URL.value}/reminders/${reminderToDelete.value.id}/`);
         fetchReminders();  // Refresh the list after deleting
         deleteDialog.value = false;
       } catch (error) {

@@ -84,6 +84,7 @@ export default {
     const editedLead = ref({});
     const leadToDelete = ref(null);
     const isCreating = ref(false);
+    const BASE_API_URL = ref(import.meta.env.VITE_BASE_API_URL)
 
     // Fetch leads with applied filters
     const fetchLeads = async () => {
@@ -96,7 +97,7 @@ export default {
           queryParams += `email=${filters.value.email}&`;
         }
 
-        const response = await axios.get(`http://localhost:8000/api/leads/?${queryParams}`);
+        const response = await axios.get(`${BASE_API_URL.value}/leads/?${queryParams}`);
         leads.value = response.data;
       } catch (error) {
         console.error('Error fetching leads:', error);
@@ -120,7 +121,7 @@ export default {
     // Create lead
     const createLead = async () => {
       try {
-        await axios.post('http://localhost:8000/api/leads/', editedLead.value);
+        await axios.post(`${BASE_API_URL.value}/leads/`, editedLead.value);
         fetchLeads();  // Refresh the list after creating
         editDialog.value = false;
       } catch (error) {
@@ -131,7 +132,7 @@ export default {
     // Update lead
     const updateLead = async () => {
       try {
-        await axios.put(`http://localhost:8000/api/leads/${editedLead.value.id}/`, editedLead.value);
+        await axios.put(`${BASE_API_URL.value}/leads/${editedLead.value.id}/`, editedLead.value);
         fetchLeads();  // Refresh the list after editing
         editDialog.value = false;
       } catch (error) {
@@ -148,7 +149,7 @@ export default {
     // Confirm lead deletion
     const deleteLeadConfirm = async () => {
       try {
-        await axios.delete(`http://localhost:8000/api/leads/${leadToDelete.value.id}/`);
+        await axios.delete(`${BASE_API_URL.value}/leads/${leadToDelete.value.id}/`);
         fetchLeads();  // Refresh the list after deleting
         deleteDialog.value = false;
       } catch (error) {

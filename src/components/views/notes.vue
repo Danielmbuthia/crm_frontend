@@ -73,6 +73,7 @@
       const filters = ref({
         content: ''
       });
+      const BASE_API_URL = ref(import.meta.env.VITE_BASE_API_URL)
       const headers = [
         { title: 'Content', value: 'content' },
         { title: 'Lead', value: 'lead_detail.name' },
@@ -93,7 +94,7 @@
             queryParams += `content=${filters.value.content}&`;
           }
   
-          const response = await axios.get(`http://localhost:8000/api/notes/?${queryParams}`);
+          const response = await axios.get(`${BASE_API_URL.value}/notes/?${queryParams}`);
           notes.value = response.data;
         } catch (error) {
           console.error('Error fetching notes:', error);
@@ -103,7 +104,7 @@
       // Fetch leads to populate the select dropdown
       const fetchLeads = async () => {
         try {
-          const response = await axios.get('http://localhost:8000/api/leads/');
+          const response = await axios.get(`${BASE_API_URL.value}/leads/`);
           leads.value = response.data;
         } catch (error) {
           console.error('Error fetching leads:', error);
@@ -127,7 +128,7 @@
       // Create note
       const createNote = async () => {
         try {
-          await axios.post('http://localhost:8000/api/notes/', editedNote.value);
+          await axios.post(`${BASE_API_URL.value}/notes/`, editedNote.value);
           fetchNotes();  // Refresh the list after creating
           editDialog.value = false;
         } catch (error) {
@@ -138,7 +139,7 @@
       // Update note
       const updateNote = async () => {
         try {
-          await axios.put(`http://localhost:8000/api/notes/${editedNote.value.id}/`, editedNote.value);
+          await axios.put(`${BASE_API_URL.value}/notes/${editedNote.value.id}/`, editedNote.value);
           fetchNotes();  // Refresh the list after editing
           editDialog.value = false;
         } catch (error) {
@@ -155,7 +156,7 @@
       // Confirm note deletion
       const deleteNoteConfirm = async () => {
         try {
-          await axios.delete(`http://localhost:8000/api/notes/${noteToDelete.value.id}/`);
+          await axios.delete(`${BASE_API_URL.value}/notes/${noteToDelete.value.id}/`);
           fetchNotes();  // Refresh the list after deleting
           deleteDialog.value = false;
         } catch (error) {

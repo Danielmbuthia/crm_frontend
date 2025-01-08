@@ -86,6 +86,8 @@ export default {
   setup() {
     const contacts = ref([]);
     const leads = ref([]);  
+    const BASE_API_URL = ref(import.meta.env.VITE_BASE_API_URL)
+    
     const filters = ref({
       name: '',
       email: '',
@@ -119,7 +121,7 @@ export default {
           queryParams += `phone=${filters.value.phone}&`;
         }
 
-        const response = await axios.get(`http://localhost:8000/api/contacts/?${queryParams}`);
+        const response = await axios.get(`${BASE_API_URL.value}/contacts/?${queryParams}`);
         contacts.value = response.data;
         console.log(contacts.value);
       } catch (error) {
@@ -130,7 +132,7 @@ export default {
     // Fetch leads to populate the select dropdown
     const fetchLeads = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/leads/');
+        const response = await axios.get(`${BASE_API_URL.value}/leads/`);
         leads.value = response.data;
       } catch (error) {
         console.error('Error fetching leads:', error);
@@ -154,7 +156,7 @@ export default {
     // Create contact
     const createContact = async () => {
       try {
-        await axios.post('http://localhost:8000/api/contacts/', editedContact.value);
+        await axios.post(`${BASE_API_URL.value}/contacts/`, editedContact.value);
         fetchContacts();  // Refresh the list after creating
         editDialog.value = false;
       } catch (error) {
@@ -165,7 +167,7 @@ export default {
     // Update contact
     const updateContact = async () => {
       try {
-        await axios.put(`http://localhost:8000/api/contacts/${editedContact.value.id}/`, editedContact.value);
+        await axios.put(`${BASE_API_URL.value}/contacts/${editedContact.value.id}/`, editedContact.value);
         fetchContacts();  // Refresh the list after editing
         editDialog.value = false;
       } catch (error) {
@@ -182,7 +184,7 @@ export default {
     // Confirm contact deletion
     const deleteContactConfirm = async () => {
       try {
-        await axios.delete(`http://localhost:8000/api/contacts/${contactToDelete.value.id}/`);
+        await axios.delete(`${BASE_API_URL.value}/contacts/${contactToDelete.value.id}/`);
         fetchContacts();  // Refresh the list after deleting
         deleteDialog.value = false;
       } catch (error) {
